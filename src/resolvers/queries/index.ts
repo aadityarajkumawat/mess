@@ -1,7 +1,9 @@
-import { me } from './me';
+import { getEvents } from './getEvents'
+import { me } from './me'
 
-export default { me };
+export default { me, getEvents }
 
 export interface Queries {
-    me: typeof me;
+    me: typeof me
+    getEvents: typeof getEvents
 }

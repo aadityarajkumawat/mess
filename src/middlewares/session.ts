@@ -1,15 +1,15 @@
-import connectRedis from 'connect-redis';
-import session from 'express-session';
-import redis from 'redis';
-import { $10_YEARS, COOKIE_NAME, __prod__ } from '../constants';
+import connectRedis from 'connect-redis'
+import session from 'express-session'
+import redis from 'redis'
+import { $10_YEARS, COOKIE_NAME, __prod__ } from '../constants'
 
-const RedisStore = connectRedis(session);
-const redisClient = redis.createClient({ url: process.env.REDIS_URL });
+const RedisStore = connectRedis(session)
+const redisClient = redis.createClient({})
 
 const sessionStore = new RedisStore({
     client: redisClient,
     disableTouch: true,
-});
+})
 
 export function sessionMiddleware(SECRET: string) {
     return session({
@@ -24,5 +24,5 @@ export function sessionMiddleware(SECRET: string) {
         },
         saveUninitialized: false,
         resave: false,
-    });
+    })
 }

@@ -1,15 +1,49 @@
-import { User } from '@prisma/client';
+import { User } from '@prisma/client'
 
 export interface UserResponse {
-    error: string | null;
-    user: Omit<User, 'password'> | null;
+    error: string | null
+    user: Omit<User, 'password'> | null
 }
 
 export interface LoginInput {
-    username: string;
-    password: string;
+    email: string
+    password: string
 }
 
 export interface RegisterInput extends LoginInput {
-    name: string;
+    name: string
+    username: string
+    city: string
+    state: string
+}
+
+export interface CreateEventInput {
+    interest: string
+    eventName: string
+    venue: string
+    date: string
+    timeStart: string
+    timeEnd: string
+    description: string
+}
+
+export interface Event {
+    id: number
+    eventName: string
+    timeStart: string
+    timeEnd: string
+    venue: string
+    description: string
+    interest: string
+    organizer: string
+}
+
+export interface MutationResponse {
+    status: 'OK' | 'NOT_OK'
+    error: string | null
+}
+
+export interface GetEventsResponse {
+    events: Array<Event>
+    error: string | null
 }

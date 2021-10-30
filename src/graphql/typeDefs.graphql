@@ -5,8 +5,22 @@ type Error {
 
 type User {
     id: ID!
-    username: String!
     name: String!
+    username: String!
+    email: String!
+    city: String!
+    state: String!
+}
+
+type Event {
+    id: ID!
+    eventName: String!
+    timeStart: String!
+    timeEnd: String!
+    venue: String!
+    description: String!
+    interest: String!
+    organizer: String!
 }
 
 type UserResponse {
@@ -14,11 +28,36 @@ type UserResponse {
     error: String
 }
 
+type MutationResponse {
+    status: String!
+    error: String
+}
+
+type GetEventsResponse {
+    events: [Event]!
+    error: String
+}
+
 type Query {
     me: UserResponse!
+    getEvents: GetEventsResponse!
 }
 
 type Mutation {
-    login(username: String!, password: String!): UserResponse!
-    register(name: String!, username: String!, password: String!): UserResponse!
+    login(email: String!, password: String!): UserResponse!
+    register(
+        name: String!
+        email: String!
+        password: String!
+        state: String!
+        city: String!
+    ): UserResponse!
+    createEvent(
+        interest: String!
+        eventName: String!
+        timeStart: String!
+        timeEnd: String!
+        venue: String!
+        description: String!
+    ): MutationResponse!
 }

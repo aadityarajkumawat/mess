@@ -4,7 +4,7 @@ import path from 'path'
 import { sessionMiddleware } from './middlewares/session'
 import { ResolversI } from './resolvers'
 import Resolvers from './resolvers'
-import { PrismaClient } from '@prisma/client'
+import prisma from './prisma'
 import { contextBuilder } from './helpers/contextBuilder'
 
 async function main() {
@@ -14,16 +14,14 @@ async function main() {
     const server = new GraphQLServer({
         typeDefs,
         resolvers: resolvers as any,
-        context: (options) =>
-            contextBuilder.build(options, { prisma: new PrismaClient() }),
+        context: (options) => contextBuilder.build(options, { prisma }),
     })
 
-    server.express.use(sessionMiddleware(process.env.COOKIE_SECRET))
+    server.express.use(sessionMiddleware(process.env.COOKIE_SECRET as string))
 
     server.start(
-        { cors: { origin: '*' }, port: parseInt(process.env.PORT) },
+        { cors: { origin: '*' }, port: parseInt(process.env.PORT as string) },
         (options) => {
-            console.log(options)
             console.log(`Server running at port ${options.port}`)
         },
     )

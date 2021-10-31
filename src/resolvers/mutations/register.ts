@@ -15,6 +15,17 @@ export async function register(
         }
         const user = await prisma.user.create({ data })
         if (!user) return { error: 'Error while registering', user: null }
+        const userProfile = await prisma.profile.create({
+            data: {
+                bio: '',
+                eventsAttended: 0,
+                eventsHosted: 0,
+                user: { connect: { id: user.id } },
+                image: 'https://i.ibb.co/VqQKHsL/Grey-thumb.png',
+            },
+        })
+        if (!userProfile)
+            return { error: 'Error while registering', user: null }
         request.session.userId = user.id
         return { error: null, user }
     } catch (error) {

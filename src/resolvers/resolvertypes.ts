@@ -47,3 +47,21 @@ export interface GetEventsResponse {
     events: Array<Event>
     error: string | null
 }
+
+export interface SendInviteInput {
+    to: number
+    event: number
+}
+
+export interface Profile {
+    image: string
+    name: string
+    bio: string
+    eventsHosted: number
+    eventsAttended: number
+}
+
+export interface GetProfileResponse {
+    profile: Profile | null
+    error: string | null
+}

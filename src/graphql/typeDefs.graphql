@@ -38,9 +38,29 @@ type GetEventsResponse {
     error: String
 }
 
+type GetUsersByNameResponse {
+    users: [User]!
+    error: String
+}
+
+type Profile {
+    image: String!
+    name: String!
+    bio: String!
+    eventsHosted: Int!
+    eventsAttended: Int!
+}
+
+type GetProfileResponse {
+    profile: Profile
+    error: String
+}
+
 type Query {
     me: UserResponse!
     getEvents: GetEventsResponse!
+    getUsersByName(inputString: String!): GetUsersByNameResponse!
+    getProfile: GetProfileResponse!
 }
 
 type Mutation {
@@ -60,4 +80,7 @@ type Mutation {
         venue: String!
         description: String!
     ): MutationResponse!
+    sendInvite(to: Int!, event: Int!): MutationResponse!
+    acceptInvite(invite: Int!): MutationResponse!
+    editProfile(name: String, bio: String, image: String): MutationResponse!
 }

@@ -41,3 +41,11 @@ model Event {
     user        User   @relation(fields: [userId], references: [id])
     userId      Int
 }
+
+model Invite {
+    id       Int     @id @default(autoincrement())
+    fromUser Int
+    toUser   Int
+    eventId  Int
+    status   Boolean // status true means accepted, else pending/ rejected
+}

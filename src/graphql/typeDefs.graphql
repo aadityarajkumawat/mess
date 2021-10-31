@@ -23,6 +23,13 @@ type Event {
     organizer: String!
 }
 
+type Invite {
+    eventName: String!
+    organizer: String!
+    image: String!
+    description: String!
+}
+
 type UserResponse {
     user: User
     error: String
@@ -56,11 +63,41 @@ type GetProfileResponse {
     error: String
 }
 
+#******************************
+type Img {
+    image: String!
+}
+
+type UserII {
+    Profile: Img
+}
+
+type EventII {
+    id: ID!
+    eventName: String!
+    description: String!
+    interest: String!
+    organizer: String!
+}
+
+type InviteII {
+    id: ID!
+    event: EventII!
+    fromUser: UserII
+}
+
+type GetInvitesResponse {
+    invites: [InviteII]!
+    error: String
+}
+#*********************************
+
 type Query {
     me: UserResponse!
     getEvents: GetEventsResponse!
     getUsersByName(inputString: String!): GetUsersByNameResponse!
     getProfile: GetProfileResponse!
+    getInvites: GetInvitesResponse!
 }
 
 type Mutation {

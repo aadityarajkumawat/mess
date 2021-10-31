@@ -65,3 +65,10 @@ export interface GetProfileResponse {
     profile: Profile | null
     error: string | null
 }
+
+export interface Invite {
+    eventName: string
+    organizer: string
+    image: string
+    description: string
+}

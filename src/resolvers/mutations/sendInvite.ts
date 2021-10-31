@@ -14,10 +14,10 @@ export async function sendInvite(
 
         const newInvite = await prisma.invite.create({
             data: {
-                fromUser: userId,
+                fromUser: { connect: { id: userId } },
                 status: false,
                 toUser: args.to,
-                eventId: args.event,
+                event: { connect: { id: args.event } },
             },
         })
         if (!newInvite)

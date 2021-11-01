@@ -1,9 +1,9 @@
 import { ResolverContext } from '../../typings'
-import { MutationResponse, SendInviteInput } from '../resolvertypes'
+import { MutationResponse } from '../resolvertypes'
 
-export async function sendInvite(
+export async function joinEvent(
     _: any,
-    args: SendInviteInput,
+    args: { event: number },
     { request, prisma }: ResolverContext,
 ): Promise<MutationResponse> {
     try {
@@ -12,33 +12,31 @@ export async function sendInvite(
             return { status: 'NOT_OK', error: 'User is not authenticated' }
         }
 
-        let alreadyFound = await prisma.invite.findMany({
+        const alreadyAttending = await prisma.attendEvents.findMany({
             where: {
-                fromUser: { id: userId },
-                toUser: args.to,
                 event: { id: args.event },
+                user: { id: userId },
             },
         })
 
-        if (alreadyFound && alreadyFound.length > 0) {
-            await prisma.invite.delete({
+        if (alreadyAttending.length > 0) {
+            await prisma.attendEvents.delete({
                 where: {
-                    id: alreadyFound[0].id,
+                    id: alreadyAttending[0].id,
                 },
             })
             return { status: 'OK', error: null }
         }
 
-        const newInvite = await prisma.invite.create({
+        const newAttendedEvent = await prisma.attendEvents.create({
             data: {
-                fromUser: { connect: { id: userId } },
-                status: false,
-                toUser: args.to,
                 event: { connect: { id: args.event } },
+                user: { connect: { id: userId } },
             },
         })
-        if (!newInvite)
-            return { status: 'NOT_OK', error: 'Error sending an invite' }
+
+        if (!newAttendedEvent)
+            return { status: 'NOT_OK', error: 'process failed' }
 
         return { status: 'OK', error: null }
     } catch (error) {

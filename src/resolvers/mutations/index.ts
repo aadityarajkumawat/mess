@@ -4,6 +4,8 @@ import { register } from './register'
 import { sendInvite } from './sendInvite'
 import { acceptInvite } from './acceptInvite'
 import { editProfile } from './editProfile'
+import { joinEvent } from './joinEvent'
+import { logout } from './logout'
 
 export default {
     login,
@@ -12,6 +14,8 @@ export default {
     sendInvite,
     acceptInvite,
     editProfile,
+    joinEvent,
+    logout,
 }
 
 export interface Mutations {
@@ -21,4 +25,6 @@ export interface Mutations {
     sendInvite: typeof sendInvite
     acceptInvite: typeof acceptInvite
     editProfile: typeof editProfile
+    joinEvent: typeof joinEvent
+    logout: typeof logout
 }

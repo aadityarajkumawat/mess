@@ -24,7 +24,37 @@ export async function getProfile(
         })
         if (!user) return { profile: null, error: 'process failed' }
 
-        return { profile: { ...myProfile, name: user.name }, error: null }
+        const attended = await prisma.attendEvents.count({
+            where: {
+                user: { id: userId },
+            },
+        })
+
+        const hosted = await prisma.event.count({
+            where: {
+                user: { id: userId },
+            },
+        })
+
+        async function delay(data: GetProfileResponse) {
+            return new Promise<GetProfileResponse>((res, _) => {
+                setTimeout(() => {
+                    res(data)
+                }, 2000)
+            })
+        }
+
+        const s: GetProfileResponse = await delay({
+            profile: {
+                ...myProfile,
+                name: user.name,
+                eventsAttended: attended,
+                eventsHosted: hosted,
+            },
+            error: null,
+        })
+
+        return s
     } catch (error) {
         console.log(error.message)
         return { profile: null, error: error.message }

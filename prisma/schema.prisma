@@ -8,16 +8,17 @@ generator client {
 }
 
 model User {
-    id       Int      @id @default(autoincrement())
-    name     String
-    username String   @unique
-    email    String   @unique
-    password String
-    city     String
-    state    String
-    Profile  Profile?
-    Event    Event[]
-    Invite   Invite[]
+    id           Int            @id @default(autoincrement())
+    name         String
+    username     String         @unique
+    email        String         @unique
+    password     String
+    city         String
+    state        String
+    Profile      Profile?
+    Event        Event[]
+    Invite       Invite[]
+    attendEvents AttendEvents[]
 }
 
 model Profile {
@@ -31,17 +32,18 @@ model Profile {
 }
 
 model Event {
-    id          Int      @id @default(autoincrement())
-    eventName   String
-    timeStart   String
-    timeEnd     String
-    venue       String
-    description String
-    interest    String
-    organizer   String
-    user        User     @relation(fields: [userId], references: [id])
-    userId      Int
-    Invite      Invite[]
+    id           Int            @id @default(autoincrement())
+    eventName    String
+    timeStart    String
+    timeEnd      String
+    venue        String
+    description  String
+    interest     String
+    organizer    String
+    user         User           @relation(fields: [userId], references: [id])
+    userId       Int
+    Invite       Invite[]
+    attendEvents AttendEvents[]
 }
 
 model Invite {
@@ -52,4 +54,12 @@ model Invite {
     status   Boolean // status true means accepted, else pending/ rejected
     fromUser User    @relation(fields: [fromId], references: [id])
     fromId   Int
+}
+
+model AttendEvents {
+    id      Int   @id @default(autoincrement())
+    event   Event @relation(fields: [eventId], references: [id])
+    eventId Int
+    user    User  @relation(fields: [userId], references: [id])
+    userId  Int
 }

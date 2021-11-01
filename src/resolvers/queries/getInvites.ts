@@ -7,6 +7,7 @@ export async function getInvites(
 ): Promise<{
     invites: Array<{
         id: number
+        status: boolean
         event: {
             id: number
             eventName: string
@@ -30,6 +31,7 @@ export async function getInvites(
             },
             select: {
                 id: true,
+                status: true,
                 event: {
                     select: {
                         id: true,

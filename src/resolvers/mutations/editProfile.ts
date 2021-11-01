@@ -41,6 +41,15 @@ export async function editProfile(
         })
         if (!newProfile) return { status: 'NOT_OK', error: 'process failed' }
 
+        await prisma.event.updateMany({
+            where: {
+                user: { id: userId },
+            },
+            data: {
+                organizer: args.name,
+            },
+        })
+
         return { status: 'OK', error: null }
     } catch (error) {
         console.log(error.message)

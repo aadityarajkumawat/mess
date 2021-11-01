@@ -29,6 +29,7 @@ export interface CreateEventInput {
 
 export interface Event {
     id: number
+    userId: number
     eventName: string
     timeStart: string
     timeEnd: string

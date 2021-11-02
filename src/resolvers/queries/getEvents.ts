@@ -12,8 +12,15 @@ export async function getEvents(
             return { events: [], error: 'User is not authenticated' }
         }
 
+        const user = await prisma.user.findFirst({
+            where: {
+                id: userId,
+            },
+        })
+        if (!user) return { events: [], error: 'process failed' }
+
         const events = await prisma.event.findMany({
-            where: { user: { NOT: { id: userId } } },
+            where: { user: { NOT: { id: userId }, city: user.city } },
         })
         if (!events) return { events: [], error: 'process failed' }
 

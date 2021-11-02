@@ -21,20 +21,10 @@ export async function getMyEvents(
         })
         if (!myEvents) return { events: [], error: 'process failed' }
 
-        async function delay<T>(data: T) {
-            return new Promise<T>((res, _) => {
-                setTimeout(() => {
-                    res(data)
-                }, 2000)
-            })
-        }
-
-        const s: GetEventsResponse = await delay({
+        return {
             events: myEvents,
             error: null,
-        })
-
-        return s
+        }
     } catch (error) {
         console.log(error.message)
         return { events: [], error: error.message }

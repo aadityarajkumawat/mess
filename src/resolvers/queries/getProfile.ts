@@ -36,15 +36,7 @@ export async function getProfile(
             },
         })
 
-        async function delay(data: GetProfileResponse) {
-            return new Promise<GetProfileResponse>((res, _) => {
-                setTimeout(() => {
-                    res(data)
-                }, 2000)
-            })
-        }
-
-        const s: GetProfileResponse = await delay({
+        return {
             profile: {
                 ...myProfile,
                 name: user.name,
@@ -52,9 +44,7 @@ export async function getProfile(
                 eventsHosted: hosted,
             },
             error: null,
-        })
-
-        return s
+        }
     } catch (error) {
         console.log(error.message)
         return { profile: null, error: error.message }

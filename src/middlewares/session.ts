@@ -1,10 +1,9 @@
 import connectRedis from 'connect-redis'
 import session from 'express-session'
-import redis from 'redis'
+import { redisClient } from 'src/redis'
 import { $10_YEARS, COOKIE_NAME, __prod__ } from '../constants'
 
 const RedisStore = connectRedis(session)
-const redisClient = redis.createClient({})
 
 const sessionStore = new RedisStore({
     client: redisClient,

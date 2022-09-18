@@ -1,5 +1,12 @@
+import { __prod__ } from './constants'
 import { PrismaClient } from '@prisma/client'
 
-let prisma = new PrismaClient()
+declare global {
+    var db: PrismaClient | undefined
+}
 
-export default prisma
+export const db = new PrismaClient()
+
+if (!__prod__) {
+    global.db = db
+}

@@ -1,38 +1,74 @@
+import { signAccessToken } from '../../jwt/signAccessToken'
+import { signRefreshToken } from '../../jwt/signRefreshToken'
+import { v4 as uuid } from 'uuid'
 import { ResolverContext } from '../../typings'
-import { RegisterInput, UserResponse } from '../resolvertypes'
-import argon2 from 'argon2'
+import { RegisterInput, RegisterResponse, TnxClient } from '../resolvertypes'
+import { verifyJWT } from '../../jwt'
+import { transactionOptions } from '../../constants'
+
+function transactionExecuter(args: RegisterInput, ctx: ResolverContext) {
+    return async function (db: TnxClient) {
+        // @ts-ignore
+        const cookie = ctx.request.cookies.mess_manager
+
+        if (cookie) {
+            const jwt = verifyJWT(cookie)
+            // @ts-ignore
+            const sessionId = jwt.payload.sessionId
+
+            ctx.redis.unset(`session-${sessionId}`)
+        }
+
+        // check if user already exists
+        let user = await db.user.findFirst({
+            where: {
+                email: args.email,
+            },
+        })
+        if (user) throw new Error('user already exists')
+
+        // if user does not exist, create new user
+        const userData = { ...args, userId: uuid() }
+        user = await db.user.create({ data: userData })
+
+        // create session
+        const session = { userId: user.userId, sessionId: uuid() }
+        ctx.redis.set(`session-${session.sessionId}`, session)
+
+        // once user is created generate access and refresh token
+        const accessToken = signAccessToken({
+            userId: user.userId,
+            sessionId: session.sessionId,
+        })
+
+        const refreshToken = signRefreshToken({
+            sessionId: session.sessionId,
+        })
+
+        // @ts-ignore
+        ctx.response.cookie('mess_manager', refreshToken, {
+            maxAge: 1000 * 60 * 60 * 24,
+            httpOnly: true,
+        })
+
+        return { accessToken, error: null }
+    }
+}
 
 export async function register(
     _: any,
     args: RegisterInput,
-    { request, prisma }: ResolverContext,
-): Promise<UserResponse> {
+    ctx: ResolverContext,
+): Promise<RegisterResponse> {
     try {
-        const data: RegisterInput = {
-            ...args,
-            password: await argon2.hash(args.password),
-            username: args.email.substring(0, args.email.indexOf('@')),
-        }
-        const user = await prisma.user.create({ data })
-        if (!user) return { error: 'Error while registering', user: null }
-        const userProfile = await prisma.profile.create({
-            data: {
-                bio: '',
-                eventsAttended: 0,
-                eventsHosted: 0,
-                user: { connect: { id: user.id } },
-                image: 'https://i.ibb.co/VqQKHsL/Grey-thumb.png',
-            },
-        })
-        if (!userProfile)
-            return { error: 'Error while registering', user: null }
-        request.session.userId = user.id
-        return { error: null, user }
-    } catch (error) {
-        console.log(error.message)
-        if (error.message.includes('username')) {
-            return { error: 'This username is already taken', user: null }
-        }
-        return { error: error.message, user: null }
+        const res = await ctx.prisma.$transaction(
+            transactionExecuter(args, ctx),
+            transactionOptions,
+        )
+
+        return res
+    } catch (e) {
+        let errorMessage = e.message
+        return { accessToken: null, error: errorMessage }
     }
 }

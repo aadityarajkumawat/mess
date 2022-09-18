@@ -4,62 +4,22 @@ datasource db {
 }
 
 generator client {
-    provider = "prisma-client-js"
+    provider        = "prisma-client-js"
+    previewFeatures = ["interactiveTransactions"]
+}
+
+enum UserType {
+    DEB
+    CRE
 }
 
 model User {
-    id           Int            @id @default(autoincrement())
-    name         String
-    username     String         @unique
-    email        String         @unique
-    password     String
-    city         String
-    state        String
-    Profile      Profile?
-    Event        Event[]
-    Invite       Invite[]
-    attendEvents AttendEvents[]
-}
-
-model Profile {
-    id             Int    @id @default(autoincrement())
-    image          String
-    bio            String
-    eventsHosted   Int
-    eventsAttended Int
-    user           User   @relation(fields: [userId], references: [id])
-    userId         Int    @unique
-}
-
-model Event {
-    id           Int            @id @default(autoincrement())
-    eventName    String
-    timeStart    String
-    timeEnd      String
-    venue        String
-    description  String
-    interest     String
-    organizer    String
-    user         User           @relation(fields: [userId], references: [id])
-    userId       Int
-    Invite       Invite[]
-    attendEvents AttendEvents[]
-}
-
-model Invite {
-    id       Int     @id @default(autoincrement())
-    toUser   Int
-    event    Event   @relation(fields: [eventId], references: [id])
-    eventId  Int
-    status   Boolean // status true means accepted, else pending/ rejected
-    fromUser User    @relation(fields: [fromId], references: [id])
-    fromId   Int
-}
-
-model AttendEvents {
-    id      Int   @id @default(autoincrement())
-    event   Event @relation(fields: [eventId], references: [id])
-    eventId Int
-    user    User  @relation(fields: [userId], references: [id])
-    userId  Int
+    userId      String   @id
+    userType    UserType @default(DEB)
+    email       String   @unique
+    password    String
+    name        String
+    phoneNumber String   @unique
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @default(now())
 }

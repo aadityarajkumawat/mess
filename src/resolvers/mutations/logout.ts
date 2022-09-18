@@ -1,22 +1,22 @@
+import { verifyJWT } from '../../jwt'
 import { ResolverContext } from '../../typings'
-import { MutationResponse } from '../resolvertypes'
 
 export async function logout(
     _: any,
     __: any,
-    { request, response }: ResolverContext,
-): Promise<MutationResponse> {
-    return new Promise((res) => {
-        request.session.destroy((err) => {
-            // @ts-ignore
-            response.clearCookie('onlyauth')
-            if (err) {
-                console.log(err)
-                res({ status: 'NOT_OK', error: 'process failed' })
-                return
-            }
+    { request, response, redis }: ResolverContext,
+): Promise<any> {
+    // @ts-ignore
+    const cookie = request.cookies.mess_manager as string
 
-            res({ status: 'OK', error: null })
-        })
-    })
+    // decode JWT received from client
+    const { payload } = verifyJWT(cookie)
+    const { sessionId } = payload as { sessionId: string }
+
+    redis.unset(`session-${sessionId}`)
+
+    // @ts-ignore
+    response.clearCookie('mess_manager')
+
+    return { status: 'OK', error: null }
 }

@@ -1,34 +1,13 @@
-type Error {
-    field: String!
-    error: String!
-}
+scalar Date
 
 type User {
-    id: ID!
-    name: String!
-    username: String!
-    email: String!
-    city: String!
-    state: String!
-}
-
-type Event {
-    id: ID!
     userId: ID!
-    eventName: String!
-    timeStart: String!
-    timeEnd: String!
-    venue: String!
-    description: String!
-    interest: String!
-    organizer: String!
-}
-
-type Invite {
-    eventName: String!
-    organizer: String!
-    image: String!
-    description: String!
+    userType: String!
+    email: String!
+    name: String!
+    phoneNumber: String!
+    createdAt: Date!
+    updatedAt: Date!
 }
 
 type UserResponse {
@@ -36,132 +15,29 @@ type UserResponse {
     error: String
 }
 
-type MutationResponse {
-    status: String!
-    error: String
-}
-
-type GetEventsResponse {
-    events: [Event]!
-    error: String
-}
-
-type EventJoined {
-    id: ID!
-    userId: ID!
-    eventName: String!
-    timeStart: String!
-    timeEnd: String!
-    venue: String!
-    description: String!
-    interest: String!
-    organizer: String!
-    joined: Boolean!
-}
-
-type GetEventsResponseJoined {
-    events: [EventJoined]!
-    error: String
-}
-
-type GetUsersByNameResponse {
-    users: [User]!
-    error: String
-}
-
-type Profile {
-    image: String!
-    name: String!
-    bio: String!
-    eventsHosted: Int!
-    eventsAttended: Int!
-}
-
-type GetProfileResponse {
-    profile: Profile
-    error: String
-}
-
-#******************************
-type Img {
-    image: String!
-}
-
-type UserII {
-    Profile: Img
-}
-
-type ImgWithBio {
-    image: String!
-    bio: String!
-}
-
-type UserWithProfileImage {
-    id: ID!
-    name: String!
-    username: String!
-    email: String!
-    city: String!
-    state: String!
-    Profile: ImgWithBio!
-    invited: Boolean!
-}
-
-type EventII {
-    id: ID!
-    eventName: String!
-    description: String!
-    interest: String!
-    organizer: String!
-}
-
-type InviteII {
-    id: ID!
-    status: Boolean!
-    event: EventII!
-    fromUser: UserII
-}
-
-type GetInvitesResponse {
-    invites: [InviteII]!
-    error: String
-}
-#*********************************
-type GetUsersInMyCityResponse {
-    users: [UserWithProfileImage]!
+type RegisterResponse {
+    accessToken: String
     error: String
 }
 
 type Query {
     me: UserResponse!
-    getEvents: GetEventsResponseJoined!
-    getUsersByName(inputString: String!): GetUsersByNameResponse!
-    getProfile: GetProfileResponse!
-    getInvites: GetInvitesResponse!
-    getMyEvents: GetEventsResponse!
-    getUsersInMyCity(event: Int!): GetUsersInMyCityResponse!
+}
+
+type LogoutResponse {
+    status: String!
+    error: String
 }
 
 type Mutation {
-    login(email: String!, password: String!): UserResponse!
     register(
         name: String!
         email: String!
         password: String!
-        state: String!
-        city: String!
-    ): UserResponse!
-    createEvent(
-        interest: String!
-        eventName: String!
-        timeStart: String!
-        timeEnd: String!
-        venue: String!
-        description: String!
-    ): MutationResponse!
-    sendInvite(to: Int!, event: Int!): MutationResponse!
-    acceptInvite(invite: Int!): MutationResponse!
-    editProfile(name: String, bio: String, image: String): MutationResponse!
-    joinEvent(event: Int!): MutationResponse!
-    logout: MutationResponse!
+        phoneNumber: String!
+        userType: String!
+    ): RegisterResponse!
+    login(email: String!, password: String!): RegisterResponse!
+    refreshToken: RegisterResponse!
+    logout: LogoutResponse!
 }

@@ -1,23 +1,22 @@
-import { ResolverContext } from 'src/typings';
-import { UserResponse } from '../resolvertypes';
+import { ResolverContext } from 'src/typings'
+import { UserResponse } from '../resolvertypes'
+import { serialize } from 'cookie'
 
 export async function me(
     _: any,
     __: any,
-    { prisma, request }: ResolverContext
+    ___: ResolverContext,
 ): Promise<UserResponse> {
-    // console.log({ prisma, request });
-    // return { error: 'ee', user: { id: 1, name: 'aditya', username: 'aditya' } };
-    if (!request.session.userId) {
-        return { error: 'User not authenticated', user: null };
-    }
-    try {
-        const user = await prisma.user.findFirst({
-            where: { id: request.session.userId },
-        });
-        return { error: null, user };
-    } catch (error) {
-        console.log(error.message);
-        return { error: error.message, user: null };
+    return {
+        user: {
+            name: 'aditya',
+            userId: 'e847tyr84-34ctr8734t-43rt83478r',
+            userType: 'CRE',
+            email: 'arkumawat78@gmail.com',
+            phoneNumber: '9351101486',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+        error: null,
     }
 }

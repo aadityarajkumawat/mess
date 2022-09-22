@@ -22,11 +22,27 @@ type RegisterResponse {
 
 type Query {
     me: UserResponse!
+    getTodaysMenu: [MenuItemComplete!]!
 }
 
 type LogoutResponse {
     status: String!
     error: String
+}
+
+input MenuItem {
+    mealContent: String!
+    mealType: String!
+    mealDate: Date!
+}
+
+type MutationResponse {
+    success: Boolean!
+    error: String
+}
+
+input AddMenuInput {
+    menu: [MenuItem!]!
 }
 
 type Mutation {
@@ -40,4 +56,13 @@ type Mutation {
     login(email: String!, password: String!): RegisterResponse!
     refreshToken: RegisterResponse!
     logout: LogoutResponse!
+    addMenu(menu: [MenuItem!]!): MutationResponse!
+}
+
+type MenuItemComplete {
+    mealId: String!
+    mealContent: String!
+    mealType: String!
+    mealDate: Date!
+    createdAt: Date!
 }

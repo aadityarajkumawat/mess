@@ -6,3 +6,13 @@ export const transactionOptions = {
     maxWait: 3000,
     timeout: 5000,
 }
+
+export const days = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thrusday',
+    'Friday',
+    'Saturday',
+    'Sunday',
+]

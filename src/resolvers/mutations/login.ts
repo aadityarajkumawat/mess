@@ -10,12 +10,11 @@ function transactionExecuter(args: LoginInput, ctx: ResolverContext) {
     return async function (db: TnxClient) {
         // @ts-ignore
         const cookie = ctx.request.cookies.mess_manager
+        const jwt = verifyJWT(cookie)
 
-        if (cookie) {
-            const jwt = verifyJWT(cookie)
+        if (cookie && !jwt.expired) {
             // @ts-ignore
             const sessionId = jwt.payload.sessionId
-
             ctx.redis.unset(`session-${sessionId}`)
         }
 

@@ -8,6 +8,19 @@ import { contextBuilder } from './helpers/contextBuilder'
 import { ContextParams } from './typings'
 import { redis } from './redis/index'
 import cookieParser from 'cookie-parser'
+import { GraphQLScalarType } from 'graphql'
+import dayjs from 'dayjs'
+import { parseDate } from './helpers/parseDate'
+
+const dateResolver = new GraphQLScalarType({
+    name: 'Date',
+    serialize(value) {
+        return dayjs(value).format('DD-MM-YYYY')
+    },
+    parseValue(value) {
+        return parseDate(value)
+    },
+})
 
 async function main() {
     const typeDefs = path.join(__dirname, 'graphql/typeDefs.graphql')
@@ -20,7 +33,7 @@ async function main() {
 
     const server = new GraphQLServer({
         typeDefs,
-        resolvers: Resolvers,
+        resolvers: { ...Resolvers, Date: dateResolver },
         context: (options) => contextBuilder.build(options, context),
     })
 

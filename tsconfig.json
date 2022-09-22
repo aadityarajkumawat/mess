@@ -33,5 +33,7 @@
   "include": [
     "./src/**/*.tsx",
     "./src/**/*.ts",
+    "./src/**/*.graphql",
+    "./src/**/*.gql"
   ]
 }

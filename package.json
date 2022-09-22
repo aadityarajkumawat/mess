@@ -6,7 +6,7 @@
     "scripts": {
         "watch": "tsc -w",
         "build": "tsc",
-        "dev": "npx ts-node ./src/index.ts",
+        "dev": "nodemon dist/index.js",
         "start": "node dist/index",
         "dd": "sleep 3s && npx prisma migrate deploy && npx prisma generate && yarn start"
     },
@@ -23,7 +23,7 @@
         "@types/node": "^15.12.0",
         "@types/uuid": "^8.3.4",
         "@types/ws": "^7.4.4",
-        "nodemon": "^2.0.7",
+        "nodemon": "^2.0.20",
         "typescript": "^4.3.2"
     },
     "dependencies": {
@@ -33,6 +33,7 @@
         "connect-redis": "^6.0.0",
         "cookie": "^0.5.0",
         "cookie-parser": "^1.4.6",
+        "dayjs": "^1.11.5",
         "dotenv": "^10.0.0",
         "dotenv-safe": "^8.2.0",
         "express-session": "^1.17.2",

@@ -1,7 +1,9 @@
+import { getTodaysMenu } from './getTodaysMenu'
 import { me } from './me'
 
 const resolvers = {
     me,
+    getTodaysMenu,
 }
 
 const rtt: Partial<Record<keyof typeof resolvers, any>> = {} as const

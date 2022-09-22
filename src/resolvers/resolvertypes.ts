@@ -1,4 +1,4 @@
-import { Prisma, User } from '@prisma/client'
+import { Menu, Prisma, User, UserType } from '@prisma/client'
 import { redis } from 'src/redis/index'
 
 export type TnxClient = Prisma.TransactionClient
@@ -27,3 +27,29 @@ export type RegisterResponse = {
 }
 
 export type LoginResponse = RegisterResponse
+
+export type MenuItems = Array<{
+    mealContent: string
+    mealType: UserType
+    mealDate: Date
+}>
+
+export type AddMenuInput = {
+    menu: MenuItems
+}
+
+export type AddMenuResponse = {
+    success: boolean
+    error: Maybe<string>
+}
+
+export type GraphQLResponse<K extends string, T> = {
+    [key in K]: T extends boolean ? T : Maybe<T>
+} & {
+    error: Maybe<string>
+}
+
+export type UserMenuEntry = Menu & { dineIn: boolean }
+export type TodaysMenu = Array<UserMenuEntry>
+export type GetTodaysMenuResponse = GraphQLResponse<'menu', TodaysMenu>
+export type MutationResponse = GraphQLResponse<'success', boolean>
